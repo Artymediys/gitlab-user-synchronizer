@@ -1,0 +1,33 @@
+# ---------- Docker image -----------
+image:
+  repository: docker.nexus.example.com/gitlab-user-synchronizer
+  tag: 1.0.0
+  pullPolicy: IfNotPresent
+
+# ---------- Cron schedule ----------
+schedule: "0 */2 * * *"
+
+# -------------- ENV ----------------
+env:
+  TENANT_LIST: "dr,test,ai,durs"
+
+  KEYCLOAK_BASE_URL: "https://keycloak.example.com"
+  KEYCLOAK_REALM: "myrealm"
+  KEYCLOAK_CLIENT_ID: "my-sync-client"
+  KEYCLOAK_CLIENT_SECRET: "supersecret"
+
+  GITLAB_BASE_URL: "https://gitlab.example.com"
+  GITLAB_TOKEN: "glpat-xxxxxxxxxxxxxxxx"
+  GITLAB_ROOT_GROUP: "instance"
+
+  GITLAB_USER_ROLE: "developer"
+  GITLAB_OVERRIDE_ROLE: "false"
+
+# ------- Kubernetes resources -------
+resources:
+  limits:
+    cpu: "200m"
+    memory: "256Mi"
+  requests:
+    cpu: "100m"
+    memory: "128Mi"

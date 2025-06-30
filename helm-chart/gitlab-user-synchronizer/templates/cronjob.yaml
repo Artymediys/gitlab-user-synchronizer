@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "app.fullname" . }}
+  labels: {{ include "app.labels" . | nindent 4 }}
+spec:
+  schedule: "{{ .Values.schedule }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 4
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels: {{ include "app.labels" . | nindent 12 }}
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: {{ .Release.Name }}
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              env:
+                {{- range $key, $value := .Values.env }}
+                - name: {{ $key }}
+                  value: {{ $value | quote }}
+                {{- end }}
+              resources: {{ toYaml .Values.resources | nindent 16 }}
