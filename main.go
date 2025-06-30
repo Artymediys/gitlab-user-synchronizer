@@ -22,7 +22,7 @@ func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
 	// Контекст на весь запуск Job
-	ctx, cancel := context.WithTimeout(context.Background(), 55*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 	defer cancel()
 
 	// Клиенты Keycloak и GitLab

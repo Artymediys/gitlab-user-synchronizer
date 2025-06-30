@@ -68,7 +68,9 @@ func Run(
 
 			// 3. Убеждаемся, что у пользователя есть доступ к группе-тенанту.
 			groupPath := fmt.Sprintf("%s/%s", cfg.GitLabRootGroup, tenant)
-			if err = glClient.EnsureGroupAccess(ctx, gitUser.ID, groupPath, cfg.GitLabUserRole, cfg.GitLabOverrideRole); err != nil {
+			if err = glClient.EnsureGroupAccess(
+				ctx, gitUser.ID, kcUser.Email, groupPath, cfg.GitLabUserRole, cfg.GitLabOverrideRole,
+			); err != nil {
 				log.Printf("ERROR: access for %q: %v", kcUser.Email, err)
 				continue
 			}

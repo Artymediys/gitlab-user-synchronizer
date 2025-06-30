@@ -80,7 +80,14 @@ func (gl *Client) CreateUser(ctx context.Context, email, username, name string) 
 }
 
 // EnsureGroupAccess убеждается, что у пользователя есть нужная роль в группе
-func (gl *Client) EnsureGroupAccess(ctx context.Context, userID int, groupPath string, access int, override bool) error {
+func (gl *Client) EnsureGroupAccess(
+	ctx context.Context,
+	userID int,
+	email string,
+	groupPath string,
+	access int,
+	override bool,
+) error {
 	escapedGroup := url.PathEscape(groupPath) // «instance/durs» → «instance%2Fdurs»
 
 	memberURL := fmt.Sprintf("%s/api/v4/groups/%s/members/%d",
@@ -122,7 +129,7 @@ func (gl *Client) EnsureGroupAccess(ctx context.Context, userID int, groupPath s
 			return fmt.Errorf("update member HTTP %d: %s", roleResponse.StatusCode, body)
 		}
 
-		log.Printf("INFO: role updated user %d in %s → %d", userID, groupPath, access)
+		log.Printf("INFO: role updated for user %q (id=%d) in %s → roleID=%d", email, userID, groupPath, access)
 		return nil
 	}
 
@@ -147,6 +154,6 @@ func (gl *Client) EnsureGroupAccess(ctx context.Context, userID int, groupPath s
 		return fmt.Errorf("add member HTTP %d: %s", addResponse.StatusCode, body)
 	}
 
-	log.Printf("INFO: added user %d to %s with role %d", userID, groupPath, access)
+	log.Printf("INFO: added user %q (id=%d) to %s with role id=%d", email, userID, groupPath, access)
 	return nil
 }
