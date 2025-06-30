@@ -29,13 +29,13 @@ func main() {
 	keycloakClient := keycloak.NewClient(cfg)
 	gitLabClient := gitlab.NewClient(cfg)
 
-	// Получение сервисного токен Keycloak
+	// Получение сервисного токена Keycloak
 	kcToken, err := keycloakClient.FetchTokenWithRetry(ctx)
 	if err != nil {
 		log.Fatalf("FATAL ERROR: cannot obtain Keycloak token: %v", err)
 	}
 
-	// Запускаем синхронизацию.
+	// Запуск синхронизации
 	if err = syncer.Run(ctx, cfg, keycloakClient, gitLabClient, kcToken); err != nil {
 		log.Fatalf("FATAL ERROR: sync finished with error: %v", err)
 	}
